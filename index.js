@@ -1,17 +1,24 @@
-// server.js
 import express from "express";
+import sql, {connectDB} from "./config/db.js";
 
 const app = express();
 const PORT = 3000;
 
+await connectDB();
+
 app.use(express.json());
 
-// Route mẫu
-app.get("/", (req, res) => {
-  res.send("Hello from Express with ESM!");
+
+app.get("/", async (req, res) => {
+  try {
+    const result = await sql.query`SELECT GETDATE() AS currentTime`;
+    res.json(result.recordset[0]);
+  } catch (err) {
+    console.error("Query error:", err);
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// Lắng nghe
 app.listen(PORT, () => {
-  console.log(`🚀 Server is running at http://localhost:${PORT}`);
+  console.log(`Server is running at http://localhost:${PORT}`);
 });
