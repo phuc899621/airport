@@ -1,5 +1,6 @@
 import express from "express";
 import sql, {connectDB} from "./config/db.js";
+import * as sanBayController from "./controllers/san_bay.controller.js";
 
 const app = express();
 const PORT = 3000;
@@ -18,6 +19,9 @@ app.get("/", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+app.get("/san-bay", sanBayController.getSanBay);
+app.post("/san-bay", sanBayController.insertSanBay);
 
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
