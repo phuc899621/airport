@@ -1,95 +1,13 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Airport Management - Đăng nhập</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="container">
-        <div class="form-wrapper">
-            <!-- Form Đăng nhập -->
-            <div class="form-container" id="loginForm">
-                <div class="form-header">
-                    <div class="icon">✈️</div>
-                    <h2>Đăng nhập</h2>
-                    <p>Chào mừng trở lại!</p>
-                </div>
-                
-                <form>
-                    <div class="input-group">
-                        <label for="login-email">Email</label>
-                        <input type="email" id="login-email" placeholder="example@email.com" required>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label for="login-password">Mật khẩu</label>
-                        <input type="password" id="login-password" placeholder="••••••••" required>
-                    </div>
-                    
-                    <div class="form-options">
-                        <label class="checkbox">
-                            <input type="checkbox">
-                            <span>Ghi nhớ đăng nhập</span>
-                        </label>
-                        <a href="#" class="forgot-password">Quên mật khẩu?</a>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary">Đăng nhập</button>
-                </form>
-                
-                <div class="form-footer">
-                    <p>Chưa có tài khoản? <a href="#" onclick="showRegister()">Đăng ký ngay</a></p>
-                </div>
-            </div>
-
-            <!-- Form Đăng ký -->
-            <div class="form-container hidden" id="registerForm">
-                <div class="form-header">
-                    <div class="icon">✈️</div>
-                    <h2>Đăng ký</h2>
-                    <p>Tạo tài khoản mới</p>
-                </div>
-                
-                <form>
-                    <div class="input-group">
-                        <label for="register-name">Họ và tên</label>
-                        <input type="text" id="register-name" placeholder="Nguyễn Văn A" required>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label for="register-email">Email</label>
-                        <input type="email" id="register-email" placeholder="example@email.com" required>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label for="register-password">Mật khẩu</label>
-                        <input type="password" id="register-password" placeholder="••••••••" required>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label for="register-confirm">Xác nhận mật khẩu</label>
-                        <input type="password" id="register-confirm" placeholder="••••••••" required>
-                    </div>
-                    
-                    <div class="form-options">
-                        <label class="checkbox">
-                            <input type="checkbox" required>
-                            <span>Tôi đồng ý với <a href="#">điều khoản dịch vụ</a></span>
-                        </label>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary">Đăng ký</button>
-                </form>
-                
-                <div class="form-footer">
-                    <p>Đã có tài khoản? <a href="#" onclick="showLogin()">Đăng nhập</a></p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
-</body>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>frontend</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>

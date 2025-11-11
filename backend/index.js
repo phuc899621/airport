@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import sql, {connectDB} from "./config/db.js";
 import * as sanBayController from "./controllers/san_bay.controller.js";
 
@@ -7,6 +8,7 @@ const PORT = 3000;
 
 await connectDB();
 
+app.use(cors());
 app.use(express.json());
 
 
