@@ -1,11 +1,17 @@
 .container {
-  width: 100%;
-  max-width: 450px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
 }
 
 .form-wrapper {
   position: relative;
+  width: 100%;
+  max-width: 450px;
 }
+
 
 .form-container {
   background: white;
@@ -14,6 +20,7 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
   animation: fadeIn 0.5s ease;
+  
 }
 
 .form-header {
