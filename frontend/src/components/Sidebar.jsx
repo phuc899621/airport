@@ -49,6 +49,15 @@ function Sidebar({ activeMenu, setActiveMenu }) {
           <span className="nav-icon">👥</span>
           <span className="nav-text">Hành khách</span>
         </button>
+        
+       <button
+          className={`nav-item ${activeMenu === 'employees' ? 'active' : ''}`}
+          onClick={() => setActiveMenu('employees')}
+        >
+          <span className="nav-icon">👤</span>
+          <span className="nav-text">Nhân viên</span>
+        </button>
+
         <button
           className={`nav-item ${activeMenu === 'reports' ? 'active' : ''}`}
           onClick={() => setActiveMenu('reports')}

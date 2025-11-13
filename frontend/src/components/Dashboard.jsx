@@ -31,8 +31,19 @@ function Dashboard() {
             <span className="stat-unit">người</span>
           </div>
         </div>
+        
+        <div className="stat-card">
+          <div className="stat-icon green">👥</div>
+          <div className="stat-details">
+            <p className="stat-label">Tổng nhân viên</p>
+            <h3 className="stat-value">24</h3>
+            <span className="stat-unit">nhân viên</span>
+          </div>
+        </div>
+
       </div>
 
+      
       <div className="chart-section">
         <h3 className="section-heading">Biểu đồ hoạt động</h3>
         <div className="chart-placeholder">

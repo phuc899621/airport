@@ -16,7 +16,21 @@ function LoginForm({ onSwitchToRegister }) {
     e.preventDefault()
     console.log('Đăng nhập:', formData)
     alert('Đăng nhập thành công!')
-    navigate('/home')
+    // dùng formData chứ không phải useState
+    const email = formData.email.trim()
+    const password = formData.password
+
+    // kiểm tra account mẫu
+    if (email === "admin@gmail.com" && password === "123") {
+      // chuyển tới trang admin
+      navigate('/home')
+    } else if (email === "employee@gmail.com" && password === "123") {
+      // chuyển tới trang nhân viên
+      navigate('/nhanvien')
+    } else {
+      // mặc định khách hàng
+      navigate('/khachhang')
+    }
   }
 
   return (

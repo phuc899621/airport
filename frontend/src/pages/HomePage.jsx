@@ -7,6 +7,7 @@ import FlightsPage from '../components/FlightsPage'
 import AirportsPage from '../components/AirportsPage'
 import TicketsPage from '../components/TicketsPage'
 import PassengersPage from '../components/PassengersPage'
+import EmployeesPage from '../components/EmployeesPage'
 import ReportsPage from '../components/ReportsPage'
 import SettingsPage from '../components/SettingsPage'
 
@@ -25,6 +26,8 @@ function HomePage() {
         return <TicketsPage />
       case 'passengers':
         return <PassengersPage />
+      case 'employees':
+        return <EmployeesPage />
       case 'reports':
         return <ReportsPage />
       case 'settings':
