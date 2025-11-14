@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-function RegisterForm({ onSwitchToLogin }) {
+function RegisterForm({ onSwitchToAuthentication, onSwitchToLogin }) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -19,10 +19,9 @@ function RegisterForm({ onSwitchToLogin }) {
       alert('Mật khẩu xác nhận không khớp!')
       return
     }
-    
     console.log('Đăng ký:', { name: formData.name, email: formData.email, password: formData.password })
     alert('Đăng ký thành công! (Demo)')
-    onSwitchToLogin()
+    onSwitchToAuthentication()
   }
 
   return (
