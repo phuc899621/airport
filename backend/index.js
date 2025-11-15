@@ -1,25 +1,17 @@
 import express from "express";
-import cors from "cors";
-import sql, {connectDB} from "./config/db.js";
+import pool from "./config/db.js";
+import AuthRouter from "./routes/auth.routes.js";
 import * as sanBayController from "./controllers/san_bay.controller.js";
 
 const app = express();
 const PORT = 3000;
 
-await connectDB();
-
-app.use(cors());
 app.use(express.json());
+app.use("/auth", AuthRouter);
 
 
 app.get("/", async (req, res) => {
-  try {
-    const result = await sql.query`SELECT GETDATE() AS currentTime`;
-    res.json(result.recordset[0]);
-  } catch (err) {
-    console.error("Query error:", err);
-    res.status(500).json({ error: err.message });
-  }
+  res.send("Hello World!");
 });
 
 app.get("/san-bay", sanBayController.getSanBay);

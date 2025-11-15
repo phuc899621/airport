@@ -1,23 +1,11 @@
-import sql from 'mssql'
+import {Pool} from 'pg';
 
-const sqlConfig = {
-  user: 'admin',
+const pool = new Pool({
+  user: 'postgres.rlvirvgyrigpudkspxrp',
   password: '899621',
-  database: "QuanLyVeMayBay",
-  server: 'localhost',
-  options: {
-    encrypt: true,
-    trustServerCertificate: true
-  }
-}
+  host: 'aws-1-ap-south-1.pooler.supabase.com',
+  port: 6543,
+  database: 'postgres',
+})
 
-export async function connectDB() {
-  try {
-    sql.connect(sqlConfig)
-    console.log('Connected to SQL Server')
-  } catch (err) {
-    console.error('Database connection failed:', err)
-  }
-}
-
-export default sql
+export default pool
