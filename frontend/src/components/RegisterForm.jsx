@@ -1,12 +1,16 @@
 import { useState } from 'react'
+import axios from 'axios'
 
 function RegisterForm({ onSwitchToAuthentication, onSwitchToLogin }) {
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
     email: '',
     password: '',
     confirm: ''
   })
+  const [loading, setLoading] = useState(false)
+
+  const API_BASE = 'http://localhost:3000/auth'
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -19,9 +23,27 @@ function RegisterForm({ onSwitchToAuthentication, onSwitchToLogin }) {
       alert('Mật khẩu xác nhận không khớp!')
       return
     }
-    console.log('Đăng ký:', { name: formData.name, email: formData.email, password: formData.password })
-    alert('Đăng ký thành công! (Demo)')
-    onSwitchToAuthentication()
+
+    setLoading(true)
+    try {
+      // Gọi API đăng ký và gửi OTP
+      const res = await axios.post(`${API_BASE}/dang-ky/gui-otp`, {
+        tenDangNhap: formData.username,
+        email: formData.email,
+        matKhau: formData.password
+      })
+      
+      // Lưu email vào localStorage để dùng cho xác thực
+      localStorage.setItem('dangKyEmail', formData.email)
+      
+      alert(res.data.message || 'Mã OTP đã được gửi đến email của bạn!')
+      onSwitchToAuthentication()
+    } catch (err) {
+      console.error('Lỗi đăng ký:', err)
+      alert(err.response?.data?.message || 'Đăng ký thất bại. Vui lòng thử lại!')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -34,13 +56,13 @@ function RegisterForm({ onSwitchToAuthentication, onSwitchToLogin }) {
       
       <form onSubmit={handleSubmit}>
         <div className="input-group">
-          <label htmlFor="name">Họ và tên</label>
+          <label htmlFor="username">Tên đăng nhập</label>
           <input 
             type="text" 
-            name="name"
-            value={formData.name}
+            name="username"
+            value={formData.username}
             onChange={handleChange}
-            placeholder="Nguyễn Văn A" 
+            placeholder="username123" 
             required 
           />
         </div>
@@ -88,7 +110,9 @@ function RegisterForm({ onSwitchToAuthentication, onSwitchToLogin }) {
           </label>
         </div>
         
-        <button type="submit" className="btn btn-primary">Đăng ký</button>
+        <button type="submit" className="btn btn-primary" disabled={loading}>
+          {loading ? 'Đang xử lý...' : 'Đăng ký'}
+        </button>
       </form>
       
       <div className="form-footer">

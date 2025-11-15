@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import axios from "axios"
 
 function AuthenticationForm({ onSwitchToLogin, onSwitchToAuthentication }) {
     const [formData, setFormData] = useState({
@@ -7,7 +8,8 @@ function AuthenticationForm({ onSwitchToLogin, onSwitchToAuthentication }) {
 
     const [seconds, setSeconds] = useState(60);
 
-    // Đếm ngược 60s
+    const API_BASE = "http://localhost:3000/auth";
+    // Đếm ngược 60 s
     useEffect(() => {
         if (seconds <= 0) return; // dừng khi hết thời gian
         const timer = setInterval(() => {
@@ -23,23 +25,32 @@ function AuthenticationForm({ onSwitchToLogin, onSwitchToAuthentication }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (formData.maXacThuc === '') {
-            alert('Mã xác thực không khớp!');
-            return;
-
+        const email = localStorage.getItem("dangKyEmail");
+        try {
+            const res = await axios.post(`${API_BASE}/dang-ky/xac-thuc`, {
+                email,
+                otp: formData.maXacThuc
+            });
+            alert(res.data.message);
+            onSwitchToLogin(); // xác thực xong → chuyển login
+        } catch (err) {
+            alert(err.response?.data?.message || "Xác thực thất bại");
         }
-
-        console.log('Xác thực:', { maXacThuc: formData.maXacThuc });
-        alert('Xác thực thành công! (Demo)');
-        onSwitchToLogin();
     };
 
-    const handleResend = (e) => {
+
+    const handleResend = async (e) => {
         e.preventDefault();
-        onSwitchToAuthentication(); // gọi lại gửi OTP
-        setSeconds(60); // reset đếm ngược
+        const email = localStorage.getItem("dangKyEmail");
+        try {
+            const res = await axios.post(`${API_BASE}/dang-ky/gui-otp`, { email });
+            alert("OTP mới đã gửi về email!");
+            setSeconds(60);
+        } catch (err) {
+            alert(err.response?.data?.message || "Gửi lại OTP thất bại");
+        }
     };
+
 
     return (
         <div className="form-container">
