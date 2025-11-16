@@ -140,3 +140,54 @@ export const xacThucTaiKhoan=async(req,res)=>{
         client.release();
     }
 }
+
+function isEmail(str){
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(str);
+}
+
+export const dangNhap = async (req, res) => {
+    const client = await pool.connect();
+    try {
+        const { identifier, matKhau } = req.body;
+        let maTaiKhoan;
+        if(isEmail(identifier)){
+            const checkEmail = await TaiKhoanModel.getTaiKhoan(client,{ email: identifier });
+            if (!checkEmail) {
+                return res.status(404).json({
+                    message: 'Email không tồn tại!',
+                    data: {}
+                });
+            }
+            maTaiKhoan = checkEmail.MaTaiKhoan;
+        }else{
+            const checkTenDangNhap = await TaiKhoanModel.getTaiKhoan(client,{ tenDangNhap: identifier });
+            if (!checkTenDangNhap) {
+                return res.status(400).json({
+                    message: 'Tên đăng nhập không tồn tại!',
+                    data: {}
+                });
+            }
+            maTaiKhoan = checkTenDangNhap.MaTaiKhoan;
+        }
+
+        
+        const taiKhoan = await TaiKhoanModel.getTaiKhoan(client,{ maTaiKhoan });
+        const checkMatKhau = await bcrypt.compare(matKhau, taiKhoan.MatKhau);
+        if (!checkMatKhau) {
+            return res.status(400).json({
+                message: 'Mật khẩu không đúng',
+                data: {}
+            });
+        }
+        req.session.maTaiKhoan = maTaiKhoan;
+        res.status(200).json({
+            message: 'Đăng nhập thành công',
+            data: {}
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    } finally {
+        client.release();
+    }
+}

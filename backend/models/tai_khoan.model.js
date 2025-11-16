@@ -10,8 +10,8 @@ export const createTaiKhoan = async (client,taiKhoan) => {
 }
 export const getTaiKhoan = async (client,taiKhoan) => {
     try {
-        const { tenDangNhap, email } = taiKhoan;
-        const result = await client.query(`SELECT * FROM "TAIKHOAN" WHERE "TenDangNhap" = $1 OR "Email" = $2`, [tenDangNhap, email]);
+        const { tenDangNhap, email, maTaiKhoan } = taiKhoan;
+        const result = await client.query(`SELECT * FROM "TAIKHOAN" WHERE "TenDangNhap" = $1 OR "Email" = $2 OR "MaTaiKhoan" = $3`, [tenDangNhap, email,maTaiKhoan]);
         console.log(result.rows[0]);
         return result.rows[0];
     

@@ -10,3 +10,8 @@ export const xacThucTaiKhoanSchema = Joi.object({
   email: Joi.string().email().required(),
   otp: Joi.string().min(4).max(4).required(),
 });
+
+export const dangNhapSchema = Joi.object({
+  identifier: Joi.string().required(),
+  matKhau: Joi.string().required(),
+});
