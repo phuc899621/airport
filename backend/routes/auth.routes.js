@@ -8,4 +8,8 @@ const router = express.Router();
 router.post("/dang-ky/gui-otp", validate(AuthMiddleware.dangKySchema),AuthController.dangKyTaiKhoan); 
 router.post("/dang-ky/xac-thuc", validate(AuthMiddleware.xacThucTaiKhoanSchema),AuthController.xacThucTaiKhoan);
 router.post("/dang-nhap", validate(AuthMiddleware.dangNhapSchema),AuthController.dangNhap);
+
+router.post("/quen-mat-khau", validate(AuthMiddleware.quenMatKhauSchema),AuthController.quenMatKhau);
+router.post("/quen-mat-khau/xac-thuc", validate(AuthMiddleware.xacThucQuenMatKhauSchema),AuthController.xacThucQuenMatKhau);
+router.post("/quen-mat-khau/tao-moi", validate(AuthMiddleware.taoMoiMatKhauSchema),AuthController.taoMoiMatKhau);
 export default router;
