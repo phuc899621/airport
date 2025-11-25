@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-function LoginForm({ onSwitchToRegister }) {
+function LoginForm({ onSwitchToRegister, onSwitchToForgotPassword }) {
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
     email: '',
@@ -71,7 +71,7 @@ function LoginForm({ onSwitchToRegister }) {
             <input type="checkbox" />
             <span>Ghi nhớ đăng nhập</span>
           </label>
-          <a href="#" className="forgot-password">Quên mật khẩu?</a>
+          <a href="#" className="forgot-password" onClick={(e) => { e.preventDefault(); onSwitchToForgotPassword(); }}>Quên mật khẩu?</a>
         </div>
         
         <button type="submit" className="btn btn-primary">Đăng nhập</button>
