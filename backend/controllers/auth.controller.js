@@ -123,6 +123,7 @@ export const dangNhap = async (req, res) => {
             data: {}
         });
     } catch (err) {
+        console.log(err);
         errorHandler(res, err);
     } 
 }
