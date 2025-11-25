@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import pool from "./config/db.js";
 import AuthRouter from "./routes/auth.routes.js";
 import * as sanBayController from "./controllers/san_bay.controller.js";
 import session from "express-session";

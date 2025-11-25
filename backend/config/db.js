@@ -1,11 +1,6 @@
-import {Pool} from 'pg';
+import 'dotenv/config';
+import postgres from 'postgres';
 
-const pool = new Pool({
-  user: 'postgres.rlvirvgyrigpudkspxrp',
-  password: '899621',
-  host: 'aws-1-ap-south-1.pooler.supabase.com',
-  port: 6543,
-  database: 'postgres',
-})
-
-export default pool
+const connectionString= process.env.DB_URL;
+const db = postgres(connectionString);
+export default db;

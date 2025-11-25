@@ -4,6 +4,7 @@
     "bcrypt": "^6.0.0",
     "better-sqlite3": "^12.4.1",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
     "joi": "^18.0.1",
@@ -12,6 +13,7 @@
     "node-mailjet": "^6.0.11",
     "nodemailer": "^7.0.10",
     "pg": "^8.16.3",
+    "postgres": "^3.4.7",
     "sqlite3": "^5.1.7"
   },
   "name": "airport",

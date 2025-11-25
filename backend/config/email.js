@@ -1,14 +1,15 @@
 
 import axios from 'axios';
-
-const BASE_URL = 'https://smtp.maileroo.com/api/v2/emails'; 
-const SENDING_KEY="529d47f1d21bec04d0a325116bbcbf8381f7545f7ee38d474705d3293c3b1dbf"
+import 'dotenv/config';
+const BASE_URL = process.env.EMAIL_API_URL; 
+const SENDING_KEY= process.env.EMAIL_SENDING_KEY;
+const DEFAULT_CLOUD_AIRPORT_EMAIL = process.env.DEFAULT_CLOUD_AIRPORT_EMAIL;
 
 export async function sendMail({ to, subject, plain, html }) {
   try {
     const payload = {
       from: {
-        address: "noreply@10eb1893fadf3f80.maileroo.org",
+        address: DEFAULT_CLOUD_AIRPORT_EMAIL,
         display_name: "Cloud Airline"
       },
       to: [
