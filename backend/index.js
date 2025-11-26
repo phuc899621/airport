@@ -1,6 +1,9 @@
 import express from "express";
 import cors from "cors";
+
 import AuthRouter from "./routes/auth.routes.js";
+import ChuyenBayRouter from "./routes/chuyen_bay.routes.js";
+
 import * as sanBayController from "./controllers/san_bay.controller.js";
 import session from "express-session";
 
@@ -24,6 +27,7 @@ app.use(
 
 
 app.use("/auth", AuthRouter);
+app.use("/chuyen-bay", ChuyenBayRouter);
 
 
 app.get("/", async (req, res) => {
