@@ -1,9 +1,9 @@
 export default class DBError extends Error {
-    constructor(error) {
-        super("Database Error");
+    constructor(detail) {
+        super();
         this.status = 500;
-        this.data = {};
+        this.type = "Database Error";
         this.name = this.constructor.name;
-        this.error = error;
+        this.detail = detail;
     }
 }

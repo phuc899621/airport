@@ -1,17 +1,21 @@
 import express from "express";
 import cors from "cors";
 
-import AuthRouter from "./routes/auth.routes.js";
-import ChuyenBayRouter from "./routes/chuyen_bay.routes.js";
+import AuthRouter from "./routes/auth.route.js";
+import ChuyenBayRouter from "./routes/chuyen_bay.route.js";
 
 import * as sanBayController from "./controllers/san_bay.controller.js";
 import session from "express-session";
+import setupSwagger from "./docs/swagger.js";
+
 
 const app = express();
 const PORT = 3000;
 
 app.use(cors());
 app.use(express.json());
+
+setupSwagger(app);
 app.use(
   session({
     secret: "899621", 

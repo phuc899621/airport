@@ -1,20 +1,20 @@
 import db from '../config/db.js';
 import DBError from '../config/db_error.js';
 
-export const createTaiKhoan = async (tx,taiKhoan) => {
+export const taoTaiKhoan = async (tx,taiKhoanBO) => {
     try {
         const executor = tx || db;
         const { tenDangNhap, matKhau, email } = taiKhoan;
-        const [{MaTaiKhoan}]=await executor`INSERT INTO "TAIKHOAN" ("TenDangNhap", "MatKhau","Email") VALUES (${tenDangNhap}, ${matKhau}, ${email}) RETURNING "MaTaiKhoan"`;
-        return MaTaiKhoan;
+        const taiKhoan=await executor`INSERT INTO "TAIKHOAN" ("TenDangNhap", "MatKhau","Email") VALUES (${tenDangNhap}, ${matKhau}, ${email}) RETURNING "MaTaiKhoan"`;
+        return taiKhoan[0].MaTaiKhoan;
     } catch (err) {
-        throw new Error(err.message);
+        throw new DBError(err.message);
     }
 }
-export const getTaiKhoan = async (tx,taiKhoan) => {
+export const layTaiKhoan = async (tx,option) => {
     try {
         const executor = tx || db;
-        const { tenDangNhap, email, maTaiKhoan } = taiKhoan;
+        const { tenDangNhap, email, maTaiKhoan } = option;
         const query=[];
         if(tenDangNhap) query.push(`"TenDangNhap" = '${tenDangNhap}'`);
         if(email) query.push(`"Email" = '${email}'`);
@@ -26,7 +26,7 @@ export const getTaiKhoan = async (tx,taiKhoan) => {
         throw new DBError(err.message);
     }
 }
-export const updateTaiKhoan = async (tx,taiKhoan) => {
+export const capNhatTaiKhoan = async (tx,taiKhoan) => {
     try {
         const executor = tx || db;
         const { maTaiKhoan, field, value,email } = taiKhoan;
@@ -41,6 +41,6 @@ export const updateTaiKhoan = async (tx,taiKhoan) => {
         }
         return;
     } catch (err) {
-        throw new Error(err.message);
+        throw new DBError(err.message);
     }
 }

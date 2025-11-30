@@ -1,5 +1,6 @@
 import db from "../config/db.js";
-export const createOrReplaceOTP = async (tx,otpObj) => {
+import DBError from "../config/db_error.js";
+export const taoHoacThayTheOTP = async (tx,otpObj) => {
     try {
         const executor = tx || db;
         const { maTaiKhoan, otp, tenLoaiOTP } = otpObj;
@@ -13,9 +14,8 @@ export const createOrReplaceOTP = async (tx,otpObj) => {
                 "NgayTao" = NOW()
             RETURNING "MaTaiKhoan"`;
         console.log(`Ma tai khoan create/replace otp: ${result[0].MaTaiKhoan}`);
-        return result[0].MaTaiKhoan;
     } catch (err) {
-        throw new Error(err.message);
+        throw new DBError(err.message);
     }
 }
 export const deleteOTP = async (tx,otpObj) => {

@@ -1,0 +1,32 @@
+import swaggerJsDoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
+
+const swaggerOptions = {
+  swaggerDefinition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'API Documentation for Cloud Airline',
+      version: '1.0.0',
+      description: 'Tài liệu API cho website Cloud Airline với Node.js và Express',
+    },
+    servers: [
+      {
+        url: 'https://airport-phi.vercel.app',
+        description: 'Production server',
+      },
+      {
+        url: 'http://localhost:3000',
+        description: 'Local server',
+      },
+    ],
+  },
+  apis: ['./routes/*.js', './docs/*.js'], 
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+
+const setupSwagger = (app) => {
+  app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+};
+
+export default setupSwagger;
