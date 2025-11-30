@@ -1,0 +1,73 @@
+.hero {
+  height: 80vh;
+  width: 80vw;
+
+  margin-left: 10vw;
+
+  border-radius: 10px;
+  display: flex;
+  position: relative;
+  margin-top: 20px;
+  overflow-y: hidden;
+}
+.image {
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+
+}
+.image img {
+  width: 190%;
+  position: relative;
+  top: -100px;
+  left: -90%;
+ 
+}
+.contentZone {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.title {
+  font-family: "Antonio", sans-serif;
+  font-size: 60px;
+  position: relative;
+  overflow: hidden;
+  margin-top: 12%;
+}
+.content {
+  font-family: "Roboto";
+  font-size: 1.2rem;
+  color: gray;
+  width: 400px;
+  margin-top: 30px;
+  overflow: hidden;
+  position: relative;
+
+  left: -5%;
+}
+
+.image p {
+  position: absolute;
+  z-index: 10;
+  width: 325px;
+  left: 50%;
+  top: 45%;
+}
+span {
+  font-weight: bold;
+  color: black;
+  font-size: 1.4rem;
+  overflow: hidden;
+  margin-left: 20px;
+}
+.circle {
+  width: 10px;
+  height: 10px;
+  border-radius: 10px;
+  background: #5696b8;
+  position: absolute;
+  top: 5px;
+}
