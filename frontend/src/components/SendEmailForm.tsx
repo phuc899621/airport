@@ -1,17 +1,27 @@
-import { useState } from 'react'
+import { useState, FormEvent, ChangeEvent } from 'react'
 import axios from 'axios'
 
-function SendEmailForm({onSwitchToLogin , onSwitchToAuthenticationPW}) {
-  const [formData, setFormData] = useState({
+interface SendEmailFormProps {
+  onSwitchToLogin: () => void
+  onSwitchToAuthenticationPW: () => void
+}
+
+interface FormData {
+  email: string
+}
+
+function SendEmailForm({ onSwitchToLogin, onSwitchToAuthenticationPW }: SendEmailFormProps) {
+  const [formData, setFormData] = useState<FormData>({
     email: '',
   })
   const [loading, setLoading] = useState(false)
   const API_BASE = 'http://localhost:3000/auth'
-  const handleChange = (e) => {
+  
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     setLoading(true)
@@ -26,7 +36,7 @@ function SendEmailForm({onSwitchToLogin , onSwitchToAuthenticationPW}) {
       
       alert(res.data.message || 'Mã OTP đã được gửi đến email của bạn!')
       onSwitchToAuthenticationPW()
-    } catch (err) {
+    } catch (err: any) {
       console.error('Lỗi email:', err)
       alert(err.response?.data?.message || 'Xác nhận thất bại. Vui lòng thử lại!')
     } finally {

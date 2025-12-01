@@ -1,8 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FormEvent, ChangeEvent, MouseEvent } from 'react';
 import axios from "axios"
 
-function AuthenticationPW({ onSwitchToLogin , onSwitchNewPassword}) {
-    const [formData, setFormData] = useState({
+interface AuthenticationPWProps {
+  onSwitchToLogin: () => void
+  onSwitchNewPassword: () => void
+}
+
+interface FormData {
+  maXacThuc: string
+}
+
+function AuthenticationPW({ onSwitchToLogin, onSwitchNewPassword }: AuthenticationPWProps) {
+    const [formData, setFormData] = useState<FormData>({
         maXacThuc: '',
     });
 
@@ -19,11 +28,11 @@ function AuthenticationPW({ onSwitchToLogin , onSwitchNewPassword}) {
         return () => clearInterval(timer); // cleanup khi component unmount
     }, [seconds]);
 
-    const handleChange = (e) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const email = localStorage.getItem("dangKyEmail");
         try {
@@ -35,20 +44,20 @@ function AuthenticationPW({ onSwitchToLogin , onSwitchNewPassword}) {
             localStorage.setItem("resetPasswordToken", res.data.data.token);
             alert(res.data.message);
             onSwitchNewPassword(); // xác thực xong → chuyển sang tạo mật khẩu mới
-        } catch (err) {
+        } catch (err: any) {
             alert(err.response?.data?.message || "Xác thực thất bại");
         }
     };
 
 
-    const handleResend = async (e) => {
+    const handleResend = async (e: MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
         const email = localStorage.getItem("dangKyEmail");
         try {
             const res = await axios.post(`${API_BASE}/quen-mat-khau/gui-otp`, { email });
             alert("OTP mới đã gửi về email!");
             setSeconds(3600); // reset lại thời gian
-        } catch (err) {
+        } catch (err: any) {
             alert(err.response?.data?.message || "Gửi lại OTP thất bại");
         }
     };

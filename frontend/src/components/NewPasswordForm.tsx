@@ -1,8 +1,17 @@
-import { useState } from 'react'
+import { useState, FormEvent, ChangeEvent } from 'react'
 import axios from 'axios'
 
-function NewPasswordForm({ onSwitchToLogin }) {
-  const [formData, setFormData] = useState({
+interface NewPasswordFormProps {
+  onSwitchToLogin: () => void
+}
+
+interface FormData {
+  password: string
+  confirm: string
+}
+
+function NewPasswordForm({ onSwitchToLogin }: NewPasswordFormProps) {
+  const [formData, setFormData] = useState<FormData>({
     password: '',
     confirm: ''
   })
@@ -10,11 +19,11 @@ function NewPasswordForm({ onSwitchToLogin }) {
 
   const API_BASE = 'http://localhost:3000/auth'
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     
     if (formData.password !== formData.confirm) {
@@ -45,7 +54,7 @@ function NewPasswordForm({ onSwitchToLogin }) {
       
       alert(res.data.message || 'Tạo mật khẩu mới thành công!')
       onSwitchToLogin()
-    } catch (err) {
+    } catch (err: any) {
       console.error('Lỗi tạo mật khẩu:', err)
       alert(err.response?.data?.message || 'Tạo mật khẩu mới thất bại. Vui lòng thử lại!')
     } finally {
