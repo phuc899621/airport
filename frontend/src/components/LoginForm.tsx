@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 interface LoginFormProps {
   onSwitchToRegister: () => void;
+  onSwitchToForgotPassword: () => void;
 }
 
 interface FormData {
@@ -10,7 +11,7 @@ interface FormData {
   password: string;
 }
 
-function LoginForm({ onSwitchToRegister }: LoginFormProps) {
+function LoginForm({ onSwitchToRegister, onSwitchToForgotPassword }: LoginFormProps) {
   const navigate = useNavigate()
   const [formData, setFormData] = useState<FormData>({
     email: '',
@@ -76,7 +77,7 @@ function LoginForm({ onSwitchToRegister }: LoginFormProps) {
             <input type="checkbox" />
             <span>Ghi nhớ đăng nhập</span>
           </label>
-          <a href="#" className="forgot-password">Quên mật khẩu?</a>
+          <a href="#" className="forgot-password" onClick={(e) => { e.preventDefault(); onSwitchToForgotPassword(); }}>Quên mật khẩu?</a>
         </div>
         
         <button type="submit" className="btn btn-primary">Đăng nhập</button>
