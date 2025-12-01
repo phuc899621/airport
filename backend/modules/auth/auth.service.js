@@ -44,9 +44,9 @@ export class AuthService {
     async dangNhap(dto){
         const maTaiKhoan=await this.db.begin(async (tx) => {
             const { identifier, matKhau } = dto;
-            let maTaiKhoan;
             const taiKhoanBO= this.laEmail(identifier)
-                ?await this.taiKhoanService.layTaiKhoanBO({ email: identifier },tx): await this.taiKhoanService.layTaiKhoanBO({ tenDangNhap: identifier },tx);
+                ?await this.taiKhoanService.layTaiKhoanBO({ email: identifier },tx): 
+                await this.taiKhoanService.layTaiKhoanBO({ tenDangNhap: identifier },tx);
             console.log(taiKhoanBO);
             if (!taiKhoanBO.kiemTraDaXacThuc()) {
                 throw new ValidationError('Tài khoản chưa đăng ký!');
@@ -56,7 +56,7 @@ export class AuthService {
                 throw new ValidationError('Mật khẩu không đúng!');
             }
             console.log(taiKhoanBO.soSanhMatKhau);
-            return maTaiKhoan;
+            return taiKhoanBO.maTaiKhoan;
         })
         return this.taoSession(maTaiKhoan);
     }
@@ -102,8 +102,8 @@ export class AuthService {
         return emailRegex.test(str);
     }
     taoSession(maTaiKhoan,role){
-        return jwt.sign({ MaTaiKhoan: maTaiKhoan, Role: role }, process.env.JWT_SECRET_KEY, { expiresIn: process.env.JWT_EXPIRES_IN ||'1h' });
-        
+        const token= jwt.sign({ MaTaiKhoan: maTaiKhoan, Role: role }, process.env.JWT_SECRET_KEY, { expiresIn: process.env.JWT_EXPIRES_IN ||'1h' });
+        return token;
     }
     taoToken(maTaiKhoan){
         return jwt.sign({ MaTaiKhoan: maTaiKhoan }, process.env.JWT_SECRET_KEY, { expiresIn: process.env.JWT_EXPIRES_IN ||'1h' });

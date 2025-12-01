@@ -35,7 +35,7 @@ export class ValidationError extends BaseError {
 
 export class AuthenticationError extends BaseError {
     constructor(detail) {
-        super({type: "Authentication Error", detail, status: 403});
+        super({type: "Authentication Error", detail, status: 401});
     }
 }
 
