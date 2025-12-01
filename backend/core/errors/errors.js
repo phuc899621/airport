@@ -56,3 +56,8 @@ export class EmailError extends BaseError {
     }
 }
 
+export class ForbiddenError extends BaseError {
+    constructor(detail) {
+        super({type: "Forbidden Error", detail, status: 403});
+    }
+}

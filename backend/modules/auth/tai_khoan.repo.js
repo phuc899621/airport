@@ -16,7 +16,7 @@ export default class TaiKhoanRepo{
     }
     async layTaiKhoan(taiKhoanBO, tx){
         try {
-            const executor = tx || db;
+            const executor = tx || this.db;
             console.log(taiKhoanBO);
             const query=[];
             if(taiKhoanBO.tenDangNhap) query.push(`"TenDangNhap" = '${taiKhoanBO.tenDangNhap}'`);
@@ -34,7 +34,7 @@ export default class TaiKhoanRepo{
     }
     async capNhatTaiKhoan(taiKhoanBO, update, tx) {
         try {
-            const executor = tx || db;
+            const executor = tx || this.db;
             const { maTaiKhoan, email } = taiKhoanBO;
             const { field, value } = update;
             console.log(`Mataikhoan: ${maTaiKhoan}, field: ${field}, value: ${value}, email: ${email}`);

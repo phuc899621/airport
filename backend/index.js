@@ -1,7 +1,7 @@
 import express from "express";
 import AuthRouter from "./modules/auth/auth.route.js";
 import ChuyenBayRouter from "./modules/chuyen_bay/chuyen_bay.route.js";
-
+import SanBayRouter from "./modules/san_bay/san_bay.route.js";
 import session from "express-session";
 import setupSwagger from "./docs/swagger.js";
 
@@ -28,6 +28,7 @@ app.use(
 
 app.use("/auth", AuthRouter);
 app.use("/chuyen-bay", ChuyenBayRouter);
+app.use("/san-bay", SanBayRouter);
 
 
 app.get("/", async (req, res) => {

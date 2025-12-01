@@ -1,23 +1,25 @@
 import Joi from "joi";
+import { errorHandler } from "../core/errors/error_handler.js";
+import { ValidationError } from "../core/errors/errors.js";
+import ValidateOption from "./base.validator.option.js";
 
-export function validate(schema) {
+export function validate(schema, option=ValidateOption.BODY) {
   return (req, res, next) => {
     const options = {
       abortEarly: false, 
       allowUnknown: true,  
       stripUnknown: true,  
     };
-
-    const { error, value } = schema.validate(req.body, options);
-
+    const target=req[option]||{};
+    const { error, value } = schema.validate(target, options);
+    console.log(error,value);
     if (error) {
-      return res.status(400).json({
-        message: "Invalid input",
-        data: error.details.map(e => e.message)
-      });
+      errorHandler(res, new ValidationError(error.details[0].message));
     }
 
-    req.body = value; 
+    if (!req.validated) req.validated = {};
+    req.validated[option] = value;
     next();
   };
 }
+
