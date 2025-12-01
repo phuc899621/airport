@@ -1,5 +1,5 @@
-import { ValidationError } from "../config/errors.js";
-import TaiKhoanBO from "../domain/tai_khoan.bo.js";
+import { ValidationError } from "../../core/errors/errors.js";
+import TaiKhoanBO from "./tai_khoan.bo.js";
 import EmailService from "./email.service.js";
 import jwt from "jsonwebtoken";
 

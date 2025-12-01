@@ -1,6 +1,5 @@
-import { ConflictError, NotFoundError, ValidationError } from '../config/errors.js';
-import * as TaiKhoanModel from '../models/tai_khoan.model.js';
-import TaiKhoanBO from '../domain/tai_khoan.bo.js';
+import { ConflictError, NotFoundError, ValidationError } from '../../core/errors/errors.js';
+import TaiKhoanBO from './tai_khoan.bo.js';
 export default class TaiKhoanService {
     constructor(taiKhoanRepo){
         this.repo = taiKhoanRepo;

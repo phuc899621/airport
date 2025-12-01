@@ -1,18 +1,12 @@
 
-import * as TaiKhoanModel from "../models/tai_khoan.model.js";
-import * as OtpModel from "../models/otp.model.js";
-import bcrypt from "bcrypt";
-import db from "../config/db.js";
-import {sendMail} from "../config/email.js";
-import jwt from "jsonwebtoken";
-import {HTTPError, DBError} from "../config/errors.js";
+import db from "../../core/config/db.js";
 import 'dotenv/config';
-import OtpService from "../services/otp.service.js";
-import TaiKhoanRepo from "../data/tai_khoan.repo.js";
-import TaiKhoanService from "../services/tai_khoan.service.js";
-import OtpRepo from "../data/otp.repo.js";
-import { AuthService } from "../services/auth.service.js";
-import { errorHandler } from "../config/error_handler.js";
+import OtpService from "./otp.service.js";
+import TaiKhoanRepo from "./tai_khoan.repo.js";
+import TaiKhoanService from "./tai_khoan.service.js";
+import OtpRepo from "./otp.repo.js";
+import { AuthService } from "./auth.service.js";
+import { errorHandler } from "../../core/errors/error_handler.js";
 
 const taiKhoanRepo=new TaiKhoanRepo(db);
 const otpRepo=new OtpRepo(db);

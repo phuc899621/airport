@@ -1,5 +1,5 @@
-import { ValidationError } from "../config/errors.js";
-import OtpBO from "../domain/otp.bo.js";
+import { ValidationError } from "../../core/errors/errors.js";
+import OtpBO from "./otp.bo.js";
 
 export default class OtpService{
     constructor(otpRepo){

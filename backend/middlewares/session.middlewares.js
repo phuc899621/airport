@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
-import {HTTPError} from '../config/errors.js';
-import { errorHandler } from '../config/error_handler.js';
+import {HTTPError} from '../core/errors/errors.js';
+import { errorHandler } from '../core/errors/error_handler.js';
 export function sessionMiddleware(req, res, next) {
   try{
     if(!req.session.token) {

@@ -1,4 +1,4 @@
-import { DBError } from "../config/errors.js";
+import { DBError } from "../../core/errors/errors.js";
 
 export default class TaiKhoanRepo{
     constructor(db) {

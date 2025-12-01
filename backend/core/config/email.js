@@ -1,7 +1,7 @@
 
 import axios from 'axios';
 import 'dotenv/config';
-import { EmailError } from './errors.js';
+import { EmailError } from '../errors/errors.js';
 const BASE_URL = process.env.EMAIL_API_URL; 
 const SENDING_KEY= process.env.EMAIL_SENDING_KEY;
 const DEFAULT_CLOUD_AIRPORT_EMAIL = process.env.DEFAULT_CLOUD_AIRPORT_EMAIL;

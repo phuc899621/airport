@@ -1,5 +1,5 @@
-import { errorHandler } from '../config/error_handler.js';
-import * as LichChuyenBayModel from '../models/lich_chuyen_bay.model.js';
+import { errorHandler } from '../../core/errors/error_handler.js';
+import * as LichChuyenBayModel from '../../models/lich_chuyen_bay.model.js';
 
 export const getLichChuyenBay = async (req, res) => {
     try{

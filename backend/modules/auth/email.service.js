@@ -1,5 +1,5 @@
-import { sendMail } from "../config/email.js";
-import { BaseError, EmailError } from "../config/errors.js";
+import { sendMail } from "../../core/config/email.js";
+import { BaseError, EmailError } from "../../core/errors/errors.js";
 
 export default class EmailService{
     static async guiOtpDangKy(email, otp) {

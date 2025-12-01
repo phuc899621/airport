@@ -1,10 +1,9 @@
 import express from "express";
 import cors from "cors";
 
-import AuthRouter from "./routes/auth.route.js";
-import ChuyenBayRouter from "./routes/chuyen_bay.route.js";
+import AuthRouter from "./modules/auth/auth.route.js";
+import ChuyenBayRouter from "./modules/chuyen_bay/chuyen_bay.route.js";
 
-import * as sanBayController from "./controllers/san_bay.controller.js";
 import session from "express-session";
 import setupSwagger from "./docs/swagger.js";
 
@@ -37,9 +36,6 @@ app.use("/chuyen-bay", ChuyenBayRouter);
 app.get("/", async (req, res) => {
   res.send("Hello World!");
 });
-
-app.get("/san-bay", sanBayController.getSanBay);
-app.post("/san-bay", sanBayController.insertSanBay);
 
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
