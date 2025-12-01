@@ -1,6 +1,4 @@
 import express from "express";
-import cors from "cors";
-
 import AuthRouter from "./modules/auth/auth.route.js";
 import ChuyenBayRouter from "./modules/chuyen_bay/chuyen_bay.route.js";
 
@@ -11,7 +9,6 @@ import setupSwagger from "./docs/swagger.js";
 const app = express();
 const PORT = 3000;
 
-app.use(cors());
 app.use(express.json());
 
 setupSwagger(app);
