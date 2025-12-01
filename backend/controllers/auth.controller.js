@@ -2,313 +2,106 @@
 import * as TaiKhoanModel from "../models/tai_khoan.model.js";
 import * as OtpModel from "../models/otp.model.js";
 import bcrypt from "bcrypt";
-import pool from "../config/db.js";
+import db from "../config/db.js";
 import {sendMail} from "../config/email.js";
 import jwt from "jsonwebtoken";
+import {HTTPError, DBError} from "../config/errors.js";
+import 'dotenv/config';
+import OtpService from "../services/otp.service.js";
+import TaiKhoanRepo from "../data/tai_khoan.repo.js";
+import TaiKhoanService from "../services/tai_khoan.service.js";
+import OtpRepo from "../data/otp.repo.js";
+import { AuthService } from "../services/auth.service.js";
+import { errorHandler } from "../config/error_handler.js";
+
+const taiKhoanRepo=new TaiKhoanRepo(db);
+const otpRepo=new OtpRepo(db);
+const taiKhoanService=new TaiKhoanService(taiKhoanRepo);
+const otpService=new OtpService(otpRepo);
+const authService = new AuthService(db, taiKhoanService, otpService);
 
 export const dangKyTaiKhoan = async(req,res)=>{
-    const client = await pool.connect();
     try {
-        await client.query('BEGIN');
-        const { tenDangNhap, matKhau, email } = req.body;
-
-        const checkEmail = await TaiKhoanModel.getTaiKhoan(client,{ email });
-        const checkTenDangNhap = await TaiKhoanModel.getTaiKhoan(client,{ tenDangNhap });
-        console.log(checkEmail);
-        if (checkEmail) {
-            if(checkEmail.TrangThai === 'da_xac_thuc'){
-                await client.query('ROLLBACK');
-                return res.status(400).json({
-                    message: 'Email đã tồn tại!',
-                    data: {}
-                });
-            }
-            if (checkTenDangNhap) {
-                await client.query('ROLLBACK');
-                return res.status(400).json({
-                    message: 'Tên đăng nhập đã tồn tại!',
-                    data: {}
-                });
-            }
-            const salt = await bcrypt.genSalt(10);
-            const matKhauHash = await bcrypt.hash(matKhau, salt);
-            const updateMatKhauObj={
-                maTaiKhoan: checkEmail.MaTaiKhoan,
-                field:"MatKhau",
-                value: matKhauHash,
-            }
-            const updateTenDangNhapObj={
-                maTaiKhoan: checkEmail.MaTaiKhoan,
-                field:"TenDangNhap",
-                value: tenDangNhap,
-            }
-            await TaiKhoanModel.updateTaiKhoan(client,updateMatKhauObj);
-            await TaiKhoanModel.updateTaiKhoan(client,updateTenDangNhapObj);
-            const otp = Math.floor(Math.random() * 9000) + 1000;
-            await OtpModel.createOrReplaceOTP(client,{ maTaiKhoan: checkEmail.MaTaiKhoan, otp, loaiOTP:"dang_ky" });
-            await sendMail({
-                to: email,
-                subject: "Mã OTP xác thực đăng ký tài khoản Airport1",
-                plain: `Chào bạn,\n\nMã OTP của bạn là: ${otp}\nMã có hiệu lực 30 phút.\n\nCảm ơn!`,
-                html: `<p>Chào bạn,</p>
-                        <p>Mã OTP của bạn là: <strong>${otp}</strong></p>
-                        <p>Mã có hiệu lực trong 30 phút.</p>`
-            });
-            
-        }else{
-            if (checkTenDangNhap) {
-                await client.query('ROLLBACK');
-                return res.status(400).json({
-                    message: 'Tên đăng nhập đã tồn tại!',
-                    data: {}
-                });
-            }
-            const salt = await bcrypt.genSalt(10);
-            const matKhauHash = await bcrypt.hash(matKhau, salt);
-            const createTKObj={
-                tenDangNhap,
-                matKhau: matKhauHash,    
-                email
-            } 
-            const result = await TaiKhoanModel.createTaiKhoan(client,createTKObj);
-            console.log(result);
-            const otp = Math.floor(Math.random() * 9000) + 1000;
-            const maOTP=await OtpModel.createOrReplaceOTP(client,{ maTaiKhoan: result, otp, loaiOTP:"dang_ky" });
-            await sendMail({
-                to: email,
-                subject: "Mã OTP xác thực đăng ký tài khoản Airport1",
-                plain: `Chào bạn,\n\nMã OTP của bạn là: ${otp}\nMã có hiệu lực 30 phút.\n\nCảm ơn!`,
-                html: `<p>Chào bạn,</p>
-                        <p>Mã OTP của bạn là: <strong>${otp}</strong></p>
-                        <p>Mã có hiệu lực trong 30 phút.</p>`
-            });
-        }
-        
-        
-        await client.query('COMMIT');
-        res.status(201).json({
-            message: 'Đăng kí thành công! Vui lòng xác thực tài khoản qua email',
-            data: {}
+        await authService.dangKy(req.body);
+        res.status(201).json({ 
+            success: true,
+            message: 'Đăng ký tài khoản thành công, vui lòng xác thực qua email!', 
+            data: {} 
         });
     } catch (err) {
-        await client.query('ROLLBACK');
-        res.status(500).json({ error: err.message });
-    } finally {
-        client.release();
+        errorHandler(res, err);
     }
 }
 
 export const xacThucTaiKhoan=async(req,res)=>{
-    const client = await pool.connect();
     try {
-        await client.query('BEGIN');
-        const { email,otp } = req.body;
-        const checkEmail = await TaiKhoanModel.getTaiKhoan(client,{ email });
-        if (!checkEmail) {
-            await client.query('ROLLBACK');
-            return res.status(400).json({
-                message: 'Email chưa đăng ký!',
-                data: {}
-            });
-        }
-        const checkOTP = await OtpModel.getOTP(client,{ maTaiKhoan: checkEmail.MaTaiKhoan, otp, loaiOTP:"dang_ky" });
-        if (!checkOTP) {
-            await client.query('ROLLBACK');
-            return res.status(400).json({
-                message: 'Mã hết hạn!',
-                data: {}
-            });
-        }
-        console.log(checkOTP);
-        console.log(otp);
-        if(checkOTP!=otp){
-            await client.query('ROLLBACK');
-            return res.status(400).json({
-                message: 'Mã sai!',
-                data: {}
-            });
-        }
-        const updateObj={
-            maTaiKhoan: checkEmail.MaTaiKhoan,
-            field:"TrangThai",
-            value:"da_xac_thuc"
-        }
-        await TaiKhoanModel.updateTaiKhoan(client,updateObj);
-        await OtpModel.deleteOTP(client,{ maTaiKhoan: checkEmail.MaTaiKhoan, loaiOTP:"dang_ky" });
-        await client.query('COMMIT');
+        await authService.xacThucDangKy(req.body);
         res.status(201).json({
+            success: true,
             message: 'Xác thực tài khoản thành công',
             data: {}
         });
     } catch (err) {
-        await client.query('ROLLBACK');
-        res.status(500).json({ error: err.message });
-    } finally {
-        client.release();
-    }
+        errorHandler(res, err);
+    } 
 }
 
-function isEmail(str){
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(str);
-}
 
 export const dangNhap = async (req, res) => {
-    const client = await pool.connect();
     try {
-        await client.query('BEGIN');
-        const { identifier, matKhau } = req.body;
-        let maTaiKhoan;
-        if(isEmail(identifier)){
-            const checkEmail = await TaiKhoanModel.getTaiKhoan(client,{ email: identifier });
-            if (!checkEmail) {
-                await client.query('ROLLBACK');
-                return res.status(404).json({
-                    message: 'Email không tồn tại!',
-                    data: {}
-                });
-            }
-            maTaiKhoan = checkEmail.MaTaiKhoan;
-        }else{
-            const checkTenDangNhap = await TaiKhoanModel.getTaiKhoan(client,{ tenDangNhap: identifier });
-            if (!checkTenDangNhap) {
-                await client.query('ROLLBACK');
-                return res.status(400).json({
-                    message: 'Tên đăng nhập không tồn tại!',
-                    data: {}
-                });
-            }
-            maTaiKhoan = checkTenDangNhap.MaTaiKhoan;
-        }
-
-        
-        const taiKhoan = await TaiKhoanModel.getTaiKhoan(client,{ maTaiKhoan });
-        const checkMatKhau = await bcrypt.compare(matKhau, taiKhoan.MatKhau);
-        if (!checkMatKhau) {
-            await client.query('ROLLBACK');
-            return res.status(400).json({
-                message: 'Mật khẩu không đúng',
-                data: {}
-            });
-        }
-        req.session.maTaiKhoan = maTaiKhoan;
-        await client.query('COMMIT');
-        res.status(200).json({
+        const token =await authService.dangNhap(req.body);
+        req.session.token = token;
+        res.status(201).json({
+            success: true,
             message: 'Đăng nhập thành công',
             data: {}
         });
     } catch (err) {
-        await client.query('ROLLBACK');
-        res.status(500).json({ error: err.message });
-    } finally {
-        client.release();
-    }
+        console.log(err);
+        errorHandler(res, err);
+    } 
 }
 
 export const quenMatKhau = async (req, res) => {
-    const client = await pool.connect();
     try {
-        await client.query('BEGIN');
-        const { email } = req.body;
-        const checkEmail = await TaiKhoanModel.getTaiKhoan(client,{ email });
-        if (!checkEmail) {
-            await client.query('ROLLBACK');
-            return res.status(400).json({
-                message: 'Email chưa đăng ký!',
-                data: {}
-            });
-        }
-        const otp = OtpModel.generateOTP();
-        await OtpModel.createOrReplaceOTP(client,{ maTaiKhoan: checkEmail.MaTaiKhoan, otp, loaiOTP:"quen_mat_khau" });
-        await sendMail({
-            to: email,
-            subject: "Mã OTP xác thực đăng ký tài khoản CloudAirport",
-            plain: `Chào bạn,\n\nMã OTP của bạn là: ${otp}\nMã có hiệu lực 30 phút.\n\nCảm ơn!`,
-        });
-        await client.query('COMMIT');
+        await authService.quenMatKhau(req.body);
         res.status(201).json({
+            success: true,
             message: 'Mã OTP được gửi đến email để tạo lại mật khẩu!',
             data: {}
         });
     } catch (err) {
-        await client.query('ROLLBACK');
-        res.status(500).json({ error: err.message });
-    } finally {
-        client.release();
-    }
+        errorHandler(res, err);
+    } 
 }
 
 export const xacThucQuenMatKhau = async (req, res) => {
-    const client = await pool.connect();
+
     try {
-        await client.query('BEGIN');
-        const { email, otp} = req.body;
-        const checkEmail = await TaiKhoanModel.getTaiKhoan(client,{ email });
-        if (!checkEmail) {
-            await client.query('ROLLBACK');
-            return res.status(400).json({
-                message: 'Email chưa đăng ký!',
-                data: {}
-            });
-        }
-        const checkOTP = await OtpModel.getOTP(client,{ maTaiKhoan: checkEmail.MaTaiKhoan, otp, loaiOTP:"quen_mat_khau" });
-        if(checkOTP!=otp){
-            await client.query('ROLLBACK');
-            return res.status(400).json({
-                message: 'Mã sai!',
-                data: {}
-            });
-        }
-        
-        const jwtToken = jwt.sign({maTaiKhoan: checkEmail.MaTaiKhoan},"899621",{expiresIn:'1h'});
-        await OtpModel.deleteOTP(client,{ maTaiKhoan: checkEmail.MaTaiKhoan, loaiOTP:"quen_mat_khau" });
-        await client.query('COMMIT');
+        const token=await authService.xacThucQuenMatKhau(req.body);
         res.status(201).json({
+            success: true,
             message: 'Xác thực thành công, vui lòng gửi mật khẩu mới!',
             data: {
-                token: jwtToken
+                token
             }
         });
     } catch (err) {
-        await client.query('ROLLBACK');
-        res.status(500).json({ error: err.message });
-    } finally {
-        client.release();
-    }
+        errorHandler(res, err);
+    } 
 }
 
 export const taoMoiMatKhau = async (req, res) => {
-    const client = await pool.connect();
     try {
-        await client.query('BEGIN');
-
-        const { matKhau, token } = req.body;
-        const tokenDecode = jwt.verify(token,"899621");
-
-        const maTaiKhoan = tokenDecode.maTaiKhoan;
-        const checkTaiKhoan = await TaiKhoanModel.getTaiKhoan(client,{ maTaiKhoan });
-        if (!checkTaiKhoan) {
-            await client.query('ROLLBACK');
-            return res.status(400).json({
-                message: 'Token tạo mới mật khẩu sai hoặc hết hạn!',
-                data: {}
-            });
-        }
-
-        const salt = await bcrypt.genSalt(10);
-        const matKhauHash = await bcrypt.hash(matKhau, salt);
-        const updateMatKhauObj={maTaiKhoan,field:"MatKhau",value: matKhauHash};
-        await TaiKhoanModel.updateTaiKhoan(client,updateMatKhauObj);
-
-        await client.query('COMMIT');
+        await authService.taoMoiMatKhau(req.body);
+       
         res.status(201).json({
-            message: 'Tạo mới mật khẩu thành công!',
+            success: true,
+            message: 'Đổi mật khẩu thành công!',
             data: {}
         });
     } catch (err) {
-        await client.query('ROLLBACK');
-        res.status(500).json({ error: err.message });
-    } finally {
-        client.release();
-    }
+        errorHandler(res, err);
+    } 
+    
 }
