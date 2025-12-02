@@ -12,7 +12,7 @@ export default class SanBayService{
     async laySanBay({ maSanBay,tenSanBay, quocGia }) {
         if(maSanBay) {
             const sanBayRaw=await this.repo.laySanBayTheoMaSanBay(maSanBay);
-            return sanBayRaw?new SanBayBO(sanBayRaw):{};
+            return sanBayRaw?new SanBayBO(sanBayRaw):null;
         }
         console.log("tim san bay nhap vap"+maSanBay+","+tenSanBay+","+quocGia);
         if(!tenSanBay && !quocGia) return await this.repo.layTatCaSanBay();

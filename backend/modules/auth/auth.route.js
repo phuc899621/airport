@@ -18,25 +18,7 @@ const router = express.Router();
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - email
- *               - tenDangNhap
- *               - matKhau
- *             properties:
- *               email:
- *                 type: string
- *                 format: email
- *                 description: email người dùng
- *                 example: user@example.com
- *               tenDangNhap:
- *                 type: string
- *                 description: tài khoản người dùng
- *                 example: user
- *               matKhau:
- *                 type: string
- *                 description: mật khẩu tài khoản
- *                 example: user123
+ *             $ref: '#/components/schemas/DangKyGuiOtpDto'
  *     responses:
  *       201:
  *         description: OTP được gửi thành công
@@ -59,20 +41,7 @@ const router = express.Router();
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: object
- *                   properties:
- *                     type:
- *                       type: string
- *                       example: "Server Error"
- *                     detail:
- *                       type: string
- *                       example: "Tên lỗi cụ thể xây ra "
+ *               $ref: '#/components/schemas/BaseError'
  */
 router.post("/dang-ky/gui-otp", validate(AuthValidator.dangKySchema),AuthController.dangKyTaiKhoan); 
 
@@ -89,20 +58,7 @@ router.post("/dang-ky/gui-otp", validate(AuthValidator.dangKySchema),AuthControl
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - email
- *               - otp
- *             properties:
- *               email:
- *                 type: string
- *                 format: email
- *                 description: Email đã đăng ký
- *                 example: user@example.com
- *               otp:
- *                 type: string
- *                 description: Mã OTP nhận được từ email
- *                 example: "user123"
+ *             $ref: '#/components/schemas/DangKyXacThucDto'
  *     responses:
  *       201:
  *         description: Xác thực thành công
@@ -125,20 +81,7 @@ router.post("/dang-ky/gui-otp", validate(AuthValidator.dangKySchema),AuthControl
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: object
- *                   properties:
- *                     type:
- *                       type: string
- *                       example: "Server Error"
- *                     detail:
- *                       type: string
- *                       example: "Tên lỗi cụ thể xảy ra"
+ *               $ref: '#/components/schemas/BaseError'
  */
 router.post("/dang-ky/xac-thuc", validate(AuthValidator.xacThucTaiKhoanSchema),AuthController.xacThucTaiKhoan);
 
@@ -155,19 +98,7 @@ router.post("/dang-ky/xac-thuc", validate(AuthValidator.xacThucTaiKhoanSchema),A
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - identifier
- *               - matKhau
- *             properties:
- *               identifier:
- *                 type: string
- *                 description: Email hoặc tên đăng nhập
- *                 example: user@example.com
- *               matKhau:
- *                 type: string
- *                 description: Mật khẩu
- *                 example: user123
+ *             $ref: '#/components/schemas/DangNhapDto'
  *     responses:
  *       200:
  *         description: Đăng nhập thành công
@@ -192,20 +123,7 @@ router.post("/dang-ky/xac-thuc", validate(AuthValidator.xacThucTaiKhoanSchema),A
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: object
- *                   properties:
- *                     type:
- *                       type: string
- *                       example: "Server Error"
- *                     detail:
- *                       type: string
- *                       example: "Tên lỗi cụ thể xảy ra"
+ *               $ref: '#/components/schemas/BaseError'
  */
 router.post("/dang-nhap", validate(AuthValidator.dangNhapSchema),AuthController.dangNhap);
 
@@ -222,14 +140,7 @@ router.post("/dang-nhap", validate(AuthValidator.dangNhapSchema),AuthController.
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - email
- *             properties:
- *               email:
- *                 type: string
- *                 format: email
- *                 example: user@example.com
+ *             $ref: '#/components/schemas/QuenMatKhauDto'
  *     responses:
  *       201:
  *         description: OTP được gửi thành công
@@ -252,20 +163,7 @@ router.post("/dang-nhap", validate(AuthValidator.dangNhapSchema),AuthController.
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: object
- *                   properties:
- *                     type:
- *                       type: string
- *                       example: "Server Error"
- *                     detail:
- *                       type: string
- *                       example: "Tên lỗi cụ thể xảy ra"
+ *               $ref: '#/components/schemas/BaseError'
  */
 router.post("/quen-mat-khau", validate(AuthValidator.quenMatKhauSchema),AuthController.quenMatKhau);
 
@@ -284,18 +182,7 @@ router.post("/quen-mat-khau", validate(AuthValidator.quenMatKhauSchema),AuthCont
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - email
- *               - otp
- *             properties:
- *               email:
- *                 type: string
- *                 format: email
- *                 example: user@example.com
- *               otp:
- *                 type: string
- *                 example: "123456"
+ *             $ref: '#/components/schemas/XacThucQuenMatKhauDto'
  *     responses:
  *       201:
  *         description: Xác thực OTP thành công, trả về token để tạo mật khẩu mới
@@ -321,20 +208,7 @@ router.post("/quen-mat-khau", validate(AuthValidator.quenMatKhauSchema),AuthCont
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: object
- *                   properties:
- *                     type:
- *                       type: string
- *                       example: "Server Error"
- *                     detail:
- *                       type: string
- *                       example: "Tên lỗi cụ thể xảy ra"
+ *               $ref: '#/components/schemas/BaseError'
  */
 router.post("/quen-mat-khau/xac-thuc", validate(AuthValidator.xacThucQuenMatKhauSchema),AuthController.xacThucQuenMatKhau);
 
@@ -351,17 +225,7 @@ router.post("/quen-mat-khau/xac-thuc", validate(AuthValidator.xacThucQuenMatKhau
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - matKhau
- *               - token
- *             properties:
- *               matKhau:
- *                 type: string
- *                 example: "newPassword123"
- *               token:
- *                 type: string
- *                 example: "jwt-token..."
+ *             $ref: '#/components/schemas/TaoMatKhauMoiDto'
  *     responses:
  *       201:
  *         description: Đổi mật khẩu thành công
@@ -384,20 +248,7 @@ router.post("/quen-mat-khau/xac-thuc", validate(AuthValidator.xacThucQuenMatKhau
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: object
- *                   properties:
- *                     type:
- *                       type: string
- *                       example: "Server Error"
- *                     detail:
- *                       type: string
- *                       example: "Tên lỗi cụ thể xảy ra"
+ *               $ref: '#/components/schemas/BaseError'
  */
 router.post("/quen-mat-khau/tao-moi", validate(AuthValidator.taoMoiMatKhauSchema),AuthController.taoMoiMatKhau);
 export default router;

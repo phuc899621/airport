@@ -32,7 +32,7 @@ const router = express.Router();
  *         example: Sân bay Quốc tế Nội Bài
  *     responses:
  *       200:
- *         description: Danh sách sân bay
+ *         description: Lấy danh sách sân bay thành công!
  *         content:
  *           application/json:
  *             schema:
@@ -43,41 +43,18 @@ const router = express.Router();
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "Danh sách sân bay"
+ *                   example: "Lấy sân bay thành công!"
  *                 data:
  *                   type: array
  *                   items:
- *                     type: object
- *                     properties:
- *                       maSanBay:
- *                         type: number
- *                         example: 1
- *                       tenSanBay:
- *                         type: string
- *                         example: "Sân bay Quốc tế Nội Bài"
- *                       quocGia:
- *                         type: string
- *                         example: "Việt Nam"
+ *                     $ref: "#/components/schemas/SanBayObject"
  * 
  *       500:
  *         description: Cấu trúc lỗi trả về
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: object
- *                   properties:
- *                     type:
- *                       type: string
- *                       example: "Server Error"
- *                     detail:
- *                       type: string
- *                       example: "Tên lỗi cụ thể xảy ra "
+ *               $ref: "#/components/schemas/BaseError"
  */
 router.get("/", adminMiddleware,validate(laySanBayParamsSchema),validate(laySanBayQuerySchema,ValidateOption.QUERY),SanBayController.laySanBay); 
 
@@ -101,7 +78,7 @@ router.get("/", adminMiddleware,validate(laySanBayParamsSchema),validate(laySanB
  *         example: 1
  *     responses:
  *       200:
- *         description: Thông tin sân bay
+ *         description: Thông tin sân bay có tồn tại và lấy dc
  *         content:
  *           application/json:
  *             schema:
@@ -112,38 +89,16 @@ router.get("/", adminMiddleware,validate(laySanBayParamsSchema),validate(laySanB
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "Thông tin sân bay"
+ *                   example: "Lấy sân bay thành công!"
  *                 data:
- *                   type: object
- *                   properties:
- *                     maSanBay:
- *                       type: number
- *                       example: 1
- *                     tenSanBay:
- *                       type: string
- *                       example: "Sân bay Quốc tế Nội Bài"
- *                     quocGia:
- *                       type: string
- *                       example: "Việt Nam"
+ *                   $ref: "#/components/schemas/SanBayObject"
+ * 
  *       500:
  *         description: Cấu trúc lỗi trả về
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: object
- *                   properties:
- *                     type:
- *                       type: string
- *                       example: "Server Error"
- *                     detail:
- *                       type: string
- *                       example: "Tên lỗi cụ thể xảy ra "
+ *               $ref: "#/components/schemas/BaseError"
  */
 router.get("/:maSanBay", adminMiddleware,validate(laySanBayParamsSchema,ValidateOption.PARAMS),SanBayController.laySanBay);
 
@@ -160,17 +115,7 @@ router.get("/:maSanBay", adminMiddleware,validate(laySanBayParamsSchema,Validate
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - tenSanBay
- *               - quocGia
- *             properties:
- *               tenSanBay:
- *                 type: string
- *                 example: Sân bay Quốc tế Nội Bài
- *               quocGia:
- *                 type: string
- *                 example: Việt Nam
+ *             $ref: "#/components/schemas/TaoSanBayDto"
  *     responses:
  *       201:
  *         description: Sân bay được tạo thành công
@@ -186,36 +131,13 @@ router.get("/:maSanBay", adminMiddleware,validate(laySanBayParamsSchema,Validate
  *                   type: string
  *                   example: "Sân bay được tạo thành công"
  *                 data:
- *                   type: object
- *                   properties:
- *                     maSanBay:
- *                       type: number
- *                       example: 1 
- *                     tenSanBay:
- *                       type: string
- *                       example: "Sân bay Quốc tế Nội Bài"
- *                     quocGia:
- *                       type: string
- *                       example: "Việt Nam"
+ *                   $ref: "#/components/schemas/SanBayObject"
  *       500:
  *         description: Cấu trúc lỗi trả về
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: object
- *                   properties:
- *                     type:
- *                       type: string
- *                       example: "Server Error"
- *                     detail:
- *                       type: string
- *                       example: "Tên lỗi cụ thể xảy ra "
+ *               $ref: "#/components/schemas/BaseError"
  */
 router.post("/", adminMiddleware,validate(taoSanBayBodySchema),SanBayController.taoSanBay); 
 
@@ -240,14 +162,7 @@ router.post("/", adminMiddleware,validate(taoSanBayBodySchema),SanBayController.
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               tenSanBay:
- *                 type: string
- *                 example: Sân bay Quốc tế Nội Bài
- *               quocGia:
- *                 type: string
- *                 example: Việt Nam
+ *             $ref: "#/components/schemas/CapNhatSanBayDto"
  *     responses:
  *       200:
  *         description: Sân bay được cập nhật thành công
@@ -263,36 +178,13 @@ router.post("/", adminMiddleware,validate(taoSanBayBodySchema),SanBayController.
  *                   type: string
  *                   example: "Sân bay được cập nhật thành công"
  *                 data:
- *                   type: object
- *                   properties:
- *                     maSanBay:
- *                       type: number
- *                       example: 1 
- *                     tenSanBay:
- *                       type: string
- *                       example: "Sân bay Quốc tế Nội Bài"
- *                     quocGia:
- *                       type: string
- *                       example: "Việt Nam"
+ *                   $ref: "#/components/schemas/SanBayObject"
  *       500:
  *         description: Cấu trúc lỗi trả về
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: object
- *                   properties:
- *                     type:
- *                       type: string
- *                       example: "Server Error"
- *                     detail:
- *                       type: string
- *                       example: "Tên lỗi cụ thể xảy ra "
+ *               $ref: "#/components/schemas/BaseError"
  */
 router.put("/:maSanBay", adminMiddleware,
     validate(capNhatSanBayParamsSchema,ValidateOption.PARAMS),
@@ -336,20 +228,7 @@ router.put("/:maSanBay", adminMiddleware,
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: object
- *                   properties:
- *                     type:
- *                       type: string
- *                       example: "Server Error"
- *                     detail:
- *                       type: string
- *                       example: "Tên lỗi cụ thể xảy ra "
+ *               $ref: "#/components/schemas/BaseError"
  */
 router.delete("/:maSanBay", adminMiddleware,
     validate(capNhatSanBayParamsSchema,ValidateOption.PARAMS),SanBayController.xoaSanBay);

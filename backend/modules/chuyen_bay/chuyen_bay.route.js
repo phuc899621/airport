@@ -4,6 +4,6 @@ import { validate } from "../../middlewares/base.validator.js";
 import { sessionMiddleware } from "../../middlewares/session.middlewares.js";
 const router = express.Router();
 
-router.get("/lich",ChuyenBayController.getLichChuyenBay); 
+router.get("/lich",ChuyenBayController.layLichChuyenBay); 
 
 export default router;

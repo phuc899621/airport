@@ -24,6 +24,14 @@ export const laySanBay=async(req,res,next)=>{
         const {maSanBay}=req.params;
         const {tenSanBay,quocGia}=req.query;
         const sanBay=await sanBayService.laySanBay({maSanBay,tenSanBay, quocGia});
+        if(!sanBay) {
+            res.status(200).json({
+                success: true,
+                message: `Không tìm thấy sân bay có mã ${maSanBay}!`,
+                data: sanBay
+            }); 
+            return;
+        }
         res.status(200).json({
             success: true,
             message: "Lấy sân bay thành công!",
