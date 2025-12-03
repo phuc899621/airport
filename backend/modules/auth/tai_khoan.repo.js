@@ -9,7 +9,9 @@ export default class TaiKhoanRepo{
         try{
             const executor = tx || this.db;
             const resultRaws=await executor`INSERT INTO "TAIKHOAN" ("TenDangNhap", "MatKhau","Email") VALUES (${taiKhoanBO.tenDangNhap}, ${taiKhoanBO.matKhau}, ${taiKhoanBO.email}) RETURNING "MaTaiKhoan"`;
-            return resultRaws[0].MaTaiKhoan;
+            const maTaikhoan=resultRaws[0].MaTaiKhoan;
+            const taoHanhKhachResult=await executor`INSERT INTO "HANHKHACH" ("MaTaiKhoan") VALUES (${maTaikhoan})`;
+            return maTaikhoan;
         }catch(err){
             throw new DBError(err.message);
         }

@@ -56,7 +56,7 @@ const router = express.Router();
  *             schema:
  *               $ref: "#/components/schemas/BaseError"
  */
-router.get("/", adminMiddleware,validate(laySanBayParamsSchema),validate(laySanBayQuerySchema,ValidateOption.QUERY),SanBayController.laySanBay); 
+router.get("/", validate(laySanBayParamsSchema),validate(laySanBayQuerySchema,ValidateOption.QUERY),SanBayController.laySanBay); 
 
 /**
  * @swagger
@@ -100,7 +100,7 @@ router.get("/", adminMiddleware,validate(laySanBayParamsSchema),validate(laySanB
  *             schema:
  *               $ref: "#/components/schemas/BaseError"
  */
-router.get("/:maSanBay", adminMiddleware,validate(laySanBayParamsSchema,ValidateOption.PARAMS),SanBayController.laySanBay);
+router.get("/:maSanBay", validate(laySanBayParamsSchema,ValidateOption.PARAMS),SanBayController.laySanBay);
 
 /**
  * @swagger
@@ -139,7 +139,7 @@ router.get("/:maSanBay", adminMiddleware,validate(laySanBayParamsSchema,Validate
  *             schema:
  *               $ref: "#/components/schemas/BaseError"
  */
-router.post("/", adminMiddleware,validate(taoSanBayBodySchema),SanBayController.taoSanBay); 
+router.post("/", validate(taoSanBayBodySchema),SanBayController.taoSanBay); 
 
 /**
  * @swagger
@@ -186,7 +186,7 @@ router.post("/", adminMiddleware,validate(taoSanBayBodySchema),SanBayController.
  *             schema:
  *               $ref: "#/components/schemas/BaseError"
  */
-router.put("/:maSanBay", adminMiddleware,
+router.put("/:maSanBay",
     validate(capNhatSanBayParamsSchema,ValidateOption.PARAMS),
     validate(capNhatSanBayBodySchema),SanBayController.capNhatSanBay); 
 
@@ -230,7 +230,7 @@ router.put("/:maSanBay", adminMiddleware,
  *             schema:
  *               $ref: "#/components/schemas/BaseError"
  */
-router.delete("/:maSanBay", adminMiddleware,
+router.delete("/:maSanBay", 
     validate(capNhatSanBayParamsSchema,ValidateOption.PARAMS),SanBayController.xoaSanBay);
 
 export default router;
