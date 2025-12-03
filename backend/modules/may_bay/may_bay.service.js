@@ -1,4 +1,4 @@
-import MayBayBO from "./may_bay.bo";
+import MayBayBO from "./may_bay.bo.js";
 
 export default class MayBayService{
     constructor(mayBayRepo){
