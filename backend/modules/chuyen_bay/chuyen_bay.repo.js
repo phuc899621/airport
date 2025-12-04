@@ -1,3 +1,4 @@
+import { DBError } from "../../core/errors/errors.js";
 
 
 export default class ChuyenBayRepo{
@@ -5,9 +6,11 @@ export default class ChuyenBayRepo{
         this.db=db;
     }
 
-    async layLichChuyenBay(tx) {
+    async layLichChuyenBay(query,tx) {
         try {
             const executor = tx || this.db;
+            const { maChuyenBay, tenSanBayDi, tenSanbayDen, ngayGio, maHienThi,
+                 maMayBay, loaiMayBay, maSanBayDi, maSanBayDen } = query;
             const result = await executor`
                 SELECT 
                     cb."MaChuyenBay",
@@ -62,12 +65,96 @@ export default class ChuyenBayRepo{
                     AND p."MaHangVe" = 2
                     GROUP BY p."MaChuyenBay"
                 ) d2 ON d2."MaChuyenBay" = cb."MaChuyenBay"
-
+                WHERE 1=1 
+                ${maChuyenBay?executor`AND cb."MaChuyenBay" = ${maChuyenBay}`:executor``}
+                ${tenSanBayDi?executor`AND sbDi."TenSanBay" ILIKE ${'%' + String(tenSanBayDi)+'%'}`:executor``}
+                ${tenSanbayDen?executor`AND sbDen."TenSanBay" ILIKE ${'%' + String(tenSanbayDen)+'%'}`:executor``}
+                ${loaiMayBay?executor`AND mb."LoaiMayBay" ILIKE ${String(loaiMayBay)}`:executor``}
+                ${ngayGio?executor`AND cb."NgayGio" = ${ngayGio}`:executor``}
+                ${maHienThi?executor`AND cb."MaHienThi" ILIKE ${String(maHienThi)}`:executor``}
+                ${maMayBay?executor`AND cb."MaMayBay" = ${maMayBay}`:executor``}
+                ${maSanBayDi?executor`AND sbDi."MaSanBay" = ${maSanBayDi}`:executor``}
+                ${maSanBayDen?executor`AND cbDen."MaSanBay" = ${maSanBayDen}`:executor``}
                 ORDER BY cb."NgayGio" ASC, sbtg."ThuTuDung" ASC;
             `;
             return result;
         } catch (err) {
-            throw new Error(err.message);
+            throw new DBError(err.message);
+        }
+    }
+    async taoChuyenBay(data,tx)  {
+        try {
+            const executor = tx || this.db;
+            const { maMayBay, maSanBayDi, maSanBayDen, ngayGio, 
+                maHienThi, giaVe, thoiGianBay } = data;
+            const rows= await executor`
+                INSERT INTO "CHUYENBAY" ("MaMayBay","MaSanBayDi",
+                    "MaSanBayDen","NgayGio","MaHienThi","GiaVe","ThoiGianBay")
+                VALUES (${maMayBay},${maSanBayDi},${maSanBayDen},${ngayGio},${maHienThi},${giaVe},${thoiGianBay})
+                RETURNING *;
+            `;
+            return rows[0];
+        } catch (err) {
+            throw new DBError(err.message);
+        }
+    }
+    async layChuyenBayTheoMaChuyenBay(maChuyenBay, tx) {
+        try {
+            const executor = tx || this.db;
+            const result = await executor`
+                SELECT * FROM "CHUYENBAY"
+                WHERE "MaChuyenBay" = ${maChuyenBay}
+                LIMIT 1;
+            `;
+            return result[0] || null;
+        } catch (err) {
+            throw new DBError(err.message);
+        }
+    }
+    async layChuyenBayTheoFilter(filter, tx){
+        try{
+            const executor= tx || this.db;
+            const {maSanBayDi, maSanBayDen, maMayBay,ngayGio, maHienThi} = filter;
+            const result = await executor`
+                SELECT * FROM "CHUYENBAY"
+                WHERE 1=1
+                ${maSanBayDi?executor`AND "MaSanBayDi" = ${maSanBayDi}`:executor``}
+                ${maSanBayDen?executor`AND "MaSanBayDen" = ${maSanBayDen}`:executor``}
+                ${maMayBay?executor`AND "MaMayBay" = ${maMayBay}`:executor``}
+                ${ngayGio?executor`AND "NgayGio" = ${ngayGio}`:executor``}
+                ${maHienThi?executor`AND "MaHienThi" = ${maHienThi}`:executor``}
+                ORDER BY "NgayGio" ASC, "MaHienThi" ASC;
+            `;
+            return result;
+        }catch (err) {
+            throw new DBError(err.message);
+        }
+    }
+    async capNhatChuyenBay(maChuyenBay, data, tx) {
+        try {
+            const executor = tx || this.db;
+            const columns = Object.keys(data);
+            const rows = await executor`
+                UPDATE "CHUYENBAY"
+                SET ${executor(data, columns)}
+                WHERE "MaChuyenBay" = ${maChuyenBay}
+                RETURNING *;
+            `;
+            return rows[0];
+        } catch (err) {
+            throw new DBError(err.message);
+        }
+    }
+    async xoaChuyenBay(maChuyenBay, tx) {
+        try {
+            const executor = tx || this.db;
+            return await executor`
+                DELETE FROM "CHUYENBAY"
+                WHERE "MaChuyenBay" = ${maChuyenBay}
+                RETURNING *;
+            `;
+        } catch (err) {
+            throw new DBError(err.message);
         }
     }
 }

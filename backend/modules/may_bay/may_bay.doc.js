@@ -5,7 +5,7 @@
  *     tags:
  *       - MayBay [Admin]
  *     summary: Lấy danh sách may bay
- *     description: Lấy tất cả máy bay, có thể filter theo query params như loại máy bay.
+ *     description: Lấy tất cả máy bay, có thể filter theo query params như loại máy bay, mã sân bay.
  *     parameters:
  *       - in: query
  *         name: loaiMayBay
@@ -13,6 +13,12 @@
  *           type: string
  *         description: Lọc máy bay theo loại máy bay
  *         example: Boeing 747
+ *       - in: query
+ *         name: maSanBay
+ *         schema:
+ *           type: integer
+ *         description: Lọc máy bay theo mã sân bay
+ *         example: 1
  *     responses:
  *       200:
  *         description: Lấy danh sách máy bay thành công
