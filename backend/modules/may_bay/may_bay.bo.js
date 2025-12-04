@@ -3,7 +3,7 @@ export default class MayBayBO{
         this.maMayBay = MaMayBay;
         this.maSanBay = MaSanBay;
         this.loaiMayBay = LoaiMayBay;
-        this.soLuongGheHang1 = SLGheHang1;
-        this.soLuongGheHang2 = SLGheHang2;
+        this.slGheHang1 = SLGheHang1;
+        this.slGheHang2 = SLGheHang2;
     }
 }

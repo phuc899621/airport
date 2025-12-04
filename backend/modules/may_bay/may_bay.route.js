@@ -8,11 +8,11 @@ const router = express.Router();
 
 router.get("/",validate(MayBayValidator.layMayBayQuerySchema,ValidateOption.QUERY),MayBayController.layMayBay); 
 router.get("/:maMayBay", validate(MayBayValidator.layMayBayParamsSchema,ValidateOption.PARAMS),MayBayController.layMayBay);
-router.post("/", validate(MayBayValidator.taoSanBayBodySchema),MayBayController.taoMayBay); 
+router.post("/", validate(MayBayValidator.taoMayBayBodySchema),MayBayController.taoMayBay); 
 router.put("/:maMayBay",
-    validate(MayBayValidator.capNhatSanBayParamsSchema,ValidateOption.PARAMS),
-    validate(MayBayValidator.capNhatSanBayBodySchema),MayBayController.capNhatMayBay); 
+    validate(MayBayValidator.capNhatMayBayParamsSchema,ValidateOption.PARAMS),
+    validate(MayBayValidator.capNhatMayBayBodySchema),MayBayController.capNhatMayBay); 
 router.delete("/:maMayBay", 
-    validate(MayBayValidator.xoaSanbayParamsSchema,ValidateOption.PARAMS),MayBayController.xoaMayBay);
+    validate(MayBayValidator.xoaMayBayParamsSchema,ValidateOption.PARAMS),MayBayController.xoaMayBay);
 
 export default router;

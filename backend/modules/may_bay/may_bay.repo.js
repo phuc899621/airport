@@ -36,41 +36,40 @@ export default class MayBayRepo {
             throw new DBError(err.message);
         }
     }
-    async laySanBayTheoLoaiMayBay(loaiMayBay, tx) {
+   
+    async layMayBayTheoFilter(filter={},tx){
         try{
             const executor = tx || this.db;
-            return await executor`
-                SELECT * FROM "MayBay"
-                WHERE "LoaiMayBay" ILIKE '%' || ${loaiMayBay} || '%'
-            `;
-        } catch (err) {
-            throw new DBError(err.message);
-        }
-    }
-
-
-    async layTatCaMayBay(tx) {
-        try {
-            const executor = tx || this.db;
+            const {maSanBay,loaiMayBay} = filter;
             return await executor`
                 SELECT * FROM "MAYBAY"
+                WHERE 1=1
+                ${maSanBay ? executor`AND "MaSanBay" = ${maSanBay}`:executor``}
+                ${loaiMayBay ? executor`AND "LoaiMayBay" ILIKE ${'%' + loaiMayBay+'%'}`:executor``}
             `;
-        } catch (err) {
+        }catch (err) {
             throw new DBError(err.message);
-        }
+        }   
+
     }
 
 
-    async capNhatMayBay(maMayBay, {field, value}, tx) {
+    
+    async capNhatMayBay(maMayBay, data, tx) {
         try {
             const executor = tx || this.db;
-
-            const columnName = executor.unsafe(`"${field}"`);
-
+            const columns= Object.keys(data);
+            const query=`
+                UPDATE "MAYBAY"
+                SET ${executor(data,columns)}
+                WHERE "MaMayBay" = ${maMayBay}
+                RETURNING *;
+            `;
+            console.log(query);
             const rows= await executor`
-                UPDATE "MayBay"
-                SET ${columnName} = ${value}
-                WHERE "MaSanBay" = ${maMayBay}
+                UPDATE "MAYBAY"
+                SET ${executor(data,columns)}
+                WHERE "MaMayBay" = ${maMayBay}
                 RETURNING *;
             `;
 
@@ -79,7 +78,6 @@ export default class MayBayRepo {
             throw new DBError(err.message);
         }
     }
-
     
     async xoaMayBay(maMayBay, tx) {
         try {

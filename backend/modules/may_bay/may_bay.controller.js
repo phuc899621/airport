@@ -1,9 +1,10 @@
 
 import db from "../../core/config/db.js";
 import MayBayRepo from "./may_bay.repo.js";
+import SanBayRepo from "../san_bay/san_bay.repo.js";
 import MayBayService from "./may_bay.service.js";
 import {errorHandler} from "../../core/errors/error_handler.js";
-const mayBayService = new MayBayService(new MayBayRepo(db));
+const mayBayService = new MayBayService(new MayBayRepo(db),new SanBayRepo(db));
 
 export const taoMayBay = async (req, res, next) => {
     try{
@@ -21,8 +22,8 @@ export const taoMayBay = async (req, res, next) => {
 export const layMayBay = async (req, res, next) => {
     try{
         const {maMayBay} = req.params;
-        const {loaiMayBay} = req.query;
-        const mayBayList = await mayBayService.layMayBay({maMayBay,loaiMayBay});
+        const {loaiMayBay,maSanBay} = req.query;
+        const mayBayList = await mayBayService.layMayBay({maMayBay,loaiMayBay,maSanBay});
         res.status(200).json({
             success: true,
             message: "Lấy máy bay thành công!",
