@@ -33,7 +33,7 @@ function ReportsPage() {
 
       </div>
 
-      <div className="content-placeholder">
+      <div className="content-placeholder" style={{ height: "450px" }}>
         <p>📊 Nội dung báo cáo và thống kê</p>
       </div>
     </div>
