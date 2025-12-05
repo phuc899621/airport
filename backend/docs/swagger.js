@@ -12,16 +12,12 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'https://airport-phi.vercel.app',
-        description: 'Production server',
-      },
-      {
         url: 'http://localhost:3000',
         description: 'Local server',
       },
     ],
   },
-  apis: ['./routes/*.js', './docs/*.js'], 
+  apis: ['./modules/*/*.js', './docs/*.js','./docs/schemas/*.js'], 
 };
 const CSS_URL =
   "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";

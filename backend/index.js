@@ -1,10 +1,7 @@
 import express from "express";
-import cors from "cors";
-
-import AuthRouter from "./routes/auth.route.js";
-import ChuyenBayRouter from "./routes/chuyen_bay.route.js";
-
-import * as sanBayController from "./controllers/san_bay.controller.js";
+import AuthRouter from "./modules/auth/auth.route.js";
+import ChuyenBayRouter from "./modules/chuyen_bay/chuyen_bay.route.js";
+import SanBayRouter from "./modules/san_bay/san_bay.route.js";
 import session from "express-session";
 import setupSwagger from "./docs/swagger.js";
 
@@ -12,7 +9,25 @@ import setupSwagger from "./docs/swagger.js";
 const app = express();
 const PORT = 3000;
 
-app.use(cors());
+// CORS middleware - QUAN TRỌNG: Phải đặt trước tất cả routes
+app.use((req, res, next) => {
+  const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174'];
+  const origin = req.headers.origin;
+  
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 app.use(express.json());
 
 setupSwagger(app);
@@ -32,14 +47,12 @@ app.use(
 
 app.use("/auth", AuthRouter);
 app.use("/chuyen-bay", ChuyenBayRouter);
+app.use("/san-bay", SanBayRouter);
 
 
 app.get("/", async (req, res) => {
   res.send("Hello World!");
 });
-
-app.get("/san-bay", sanBayController.getSanBay);
-app.post("/san-bay", sanBayController.insertSanBay);
 
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
